@@ -19,11 +19,28 @@
             height: 100%;
             display: block;
         }
+
+        #popup {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            padding: 10px;
+            width: 20%;
+            border-radius: 15px;
+
+
+
+        }
     </style>
 </head>
 
 <body>
-
+    <div id="popup"> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt magnam sapiente
+        reiciendis
+        consequuntur praesentium quidem consectetur, voluptatum quae molestias veritatis quisquam excepturi deleniti
+        optio atque qui obcaecati sequi cupiditate quaerat?</div>
     <canvas id="c"></canvas>
 
 
@@ -45,7 +62,9 @@
         function init() {
 
 
+            document.getElementById('popup').style.display = "none"
 
+            document.getElementById('popup').addEventListener('click', function () { document.getElementById('popup').style.display = "none" }, false);
             //
 
             // renderer = new THREE.WebGLRenderer();
@@ -60,7 +79,7 @@
             scene = new THREE.Scene();
 
             camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 20000);
-            camera.position.set(30, 30, 100);
+            camera.position.set(30, 30, 200);
 
             //
 
@@ -139,7 +158,7 @@
             controls.maxPolarAngle = Math.PI * 0.495;
             controls.target.set(0, 10, 0);
             controls.minDistance = 40.0;
-            controls.maxDistance = 200.0;
+            controls.maxDistance = 400.0;
             controls.update();
 
 
@@ -154,12 +173,13 @@
             // cube.position.y = 10
 
             //Adding ghost ship
+
+
             // SHIP
             loader = new GLTFLoader();
             loader.load(
                 "./ship-destroyer/scene.gltf",
                 function (gltf) {
-                    scene.add(gltf.scene);
                     destroyer = gltf.scene;
 
                     destroyer.rotation.y = (270 * Math.PI) / 180;
@@ -167,6 +187,8 @@
                     destroyer.scale.set(80, 80, 80);
                     destroyer.position.set(0, 50, -10)
                     console.log("the model is loaded ");
+                    scene.add(gltf.scene);
+
                 },
                 undefined,
                 function (error) {
@@ -202,11 +224,17 @@
             raycaster.setFromCamera(mouse, camera);
             // calculate objects intersecting the picking ray
             console.log(scene.children);
-            var intersects = raycaster.intersectObjects(scene.children);
+            // var intersects = raycaster.intersectObjects(scene.children);
+            var intersects = raycaster.intersectObjects(destroyer.children, true);
             console.log(intersects);
             for (var i = 0; i < intersects.length; i++) {
                 console.log(intersects[i].object.uuid)
+                document.getElementById('popup').style.display = "inline"
+
+
             }
+
+
         }
 
         window.addEventListener('click', onMouseDown, false);
